@@ -2,8 +2,8 @@ package Model.Cards;
 
 /**
  * 
- * @author csd3926
- * @version Who cares my game works :D
+ * @author Vasileios Geladaris / Gelonit
+ * @version something.something
  */
 public class BigCitiesCard extends PointsCard{
 	private int points;

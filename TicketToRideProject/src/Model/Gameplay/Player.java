@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author csd3926
+ * @author Vasileios Geladaris / Gelonit
  */
 public class Player {
 	private int score;

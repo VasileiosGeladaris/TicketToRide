@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * 
- * @author csd3926
+ * @author Vasileios Geladaris / Gelonit
  */
 public class RailYard {
 	private ArrayList<TrainCard> colorStacks[] = new ArrayList[8];

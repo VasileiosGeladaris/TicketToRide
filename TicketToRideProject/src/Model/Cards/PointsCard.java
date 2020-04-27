@@ -2,7 +2,7 @@ package Model.Cards;
 
 /**
  *
- * @author csd3926
+ * @author Vasileios Geladaris / Gelonit
  */
 public abstract class PointsCard implements Card{
 	String image;

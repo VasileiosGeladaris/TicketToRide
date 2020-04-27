@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author csd3926
+ * @author Vasileios Geladaris / Gelonit
  */
 public class OnTheTrack {
 	private int counters[] = new int[9];

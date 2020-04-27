@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 
 /**
- * 
- * @author csd3926
+ *
+ * @author Vasileios Geladaris / Gelonit
  * @version I don't even know anymore
  */
 public class Controller {
@@ -45,7 +45,7 @@ public class Controller {
 	private static int index;
 	private static int pos;
 	private static int counter = 0;
-	
+
 	private static SelectCardsDialog dialog1;
 	private static SelectCardsDialog dialog2;
 	private static SelectDeckCardsDialog deckdialog1;
@@ -54,14 +54,14 @@ public class Controller {
 	private static ShowWinnerDialog winnerdialog;
 	private static MyDestCardsDialog mydestdialog1;
 	private static MyDestCardsDialog mydestdialog2;
-	
+
 	/**
 	 * <p>Reads the destination card information from a csv file and adds them to the deck along with all the train cards.</p>
 	 * Precondition: The filePath is valid.
 	 * Postcondition: Creates all necessary cards for the deck.
 	 * @param filePath	Path of the csv file containing the destination card information.
 	 * @throws FileNotFoundException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void readCards(String filePath) throws FileNotFoundException, IOException{
 		/* DESTINATION CARDS */
@@ -83,50 +83,50 @@ public class Controller {
             ArrayList<String> colors = new ArrayList<String>();
             colors.addAll(Arrays.asList(splitColors));
             String imagePath = splitLine[5];
-			
+
 			DestinationCard card = new DestinationCard(Integer.parseInt(id), colors, to, from, score, "resources/images/destination_Tickets/" + imagePath);
 			alldestcards.add(card);
         }
 		/* ----------------- */
-		
+
 		/* TRAINCARDS */
 		TrainCard red = new TrainCard();
 		red.setColor(Color.Red);
 		red.setImage("resources/images/trainCards/red.jpg");
-			
+
 		TrainCard black = new TrainCard();
 		black.setColor(Color.Black);
 		black.setImage("resources/images/trainCards/black.jpg");
-			
+
 		TrainCard blue = new TrainCard();
 		blue.setColor(Color.Blue);
 		blue.setImage("resources/images/trainCards/blue.jpg");
-			
+
 		TrainCard green = new TrainCard();
 		green.setColor(Color.Green);
 		green.setImage("resources/images/trainCards/green.jpg");
-			
+
 		TrainCard purple = new TrainCard();
 		purple.setColor(Color.Purple);
 		purple.setImage("resources/images/trainCards/purple.jpg");
-			
+
 		TrainCard white = new TrainCard();
 		white.setColor(Color.White);
 		white.setImage("resources/images/trainCards/white.jpg");
-			
+
 		TrainCard yellow = new TrainCard();
 		yellow.setColor(Color.Yellow);
 		yellow.setImage("resources/images/trainCards/yellow.jpg");
-		
+
 		TrainCard orange = new TrainCard();
 		orange.setColor(Color.Orange);
 		orange.setImage("resources/images/trainCards/orange.jpg");
-		
+
 		TrainCard loco = new TrainCard();
 		loco.setColor(Color.Locomotive);
 		loco.setImage("resources/images/trainCards/locomotive.jpg");
-		
-		for(i = 0; i < 10; i++){			
+
+		for(i = 0; i < 10; i++){
 			alltraincards.add(red);
 			alltraincards.add(black);
 			alltraincards.add(blue);
@@ -136,12 +136,12 @@ public class Controller {
 			alltraincards.add(yellow);
 			alltraincards.add(orange);
 		}
-		
+
 		for(i = 0; i < 16; i++)
 			alltraincards.add(loco);
 		/* ---------- */
     }
-	
+
 	/**
 	 * <p>Initializes the game components, gives out the cards and shuffles them.</p>
 	 * Postcondition: The game is initialized and the players can start playing.
@@ -155,25 +155,25 @@ public class Controller {
 		alldestcards = new ArrayList<>();
 		alltraincards = new ArrayList<>();
                 view.setVisible(true);
-		
+
 		try {
 			readCards("resources/files/destinationCards.csv");
 		} catch (IOException ex) {
 			Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		/* ----------------------------------------------------------------------------------------------- */
 		TrainCard c1 = alltraincards.remove(alltraincards.size()-1);
 		player1.addTrainCard(c1);
 		view.addTrainP1(c1);
-		
+
 		TrainCard c2 = alltraincards.remove(alltraincards.size()-1);
 		player2.addTrainCard(c2);
 		view.addTrainP2(c2);
-		
+
 		Collections.shuffle(alltraincards);
 		Collections.shuffle(alldestcards);
-		
+
 		for(int i = 0; i < 7; i++){
 			TrainCard temp = alltraincards.remove(0);
 			player1.addTrainCard(temp);
@@ -182,36 +182,36 @@ public class Controller {
 			player2.addTrainCard(temp2);
 			view.addTrainP2(temp2);
 		}
-		
+
 		ArrayList<TrainCard> opentrains = new ArrayList<>();
 		for(int i = 0; i < 5; i++){
 			TrainCard c = alltraincards.remove(0);
 			opentrains.add(c);
 			view.addDeckTrain(c, i);
 		}
-		
+
 		deck.initializeOpenTrainCards(opentrains);
 		deck.initializeHiddenTrainCards(alltraincards);
 		deck.initializeDestCards(alldestcards);
-		
+
 		turn.setPlayer((Math.random() <= 0.5) ? player1 : player2);
-		
+
 		updateInfo(player1);
 		updateInfo(player2);
-		
+
 		for(int i = 0; i < 6; i++){
 			options1.add(alldestcards.remove(0));
 			options2.add(alldestcards.remove(0));
 		}
-		
+
 		dialog1 = new SelectCardsDialog(options1, "Player 1");
 		dialog1.setVisible(true);
 		dialog2 = new SelectCardsDialog(options2, "Player 2");
-		
+
 		view.updateTrainCounter(deck.getHiddenTrainCounter());
 		view.updateDestCounter(deck.getDestCounter());
 	}
-	
+
 	/**
 	 * <p>Updates a player's information box.</p>
 	 * Postcondition: The player's information box is updated.
@@ -227,25 +227,25 @@ public class Controller {
 			if(turn.getPlayer().getID() == 2)
 				view.info2.setText("<html>Player " + player.getID() + "<br>Player Turn: Yes<br>Score: " + player.getScore());
 			else
-				view.info2.setText("<html>Player " + player.getID() + "<br>Player Turn: No<br>Score: " + player.getScore());	
+				view.info2.setText("<html>Player " + player.getID() + "<br>Player Turn: No<br>Score: " + player.getScore());
 	}
-	
+
 	/**
 	 * <p>Checks whether or not the game is finished.</p>
 	 * @return True if the game is finished, false if not.
 	 */
 	public static boolean isGameOver(){
 		int trainsavailable = deck.getHiddenTrainCounter() + deck.getOpenTrainCounter();
-		
+
 		return (player1.getScore() >= 100 || player2.getScore() >= 100 || trainsavailable == 0);
 	}
-	
+
 	/**
 	 * <p>Returns the winner of the two players, or a new Player object with ID = 0 in case of a tie.</p>
 	 * @return The winner Player object.
 	 */
 	public static Player getWinner(){
-		
+
 		if(player1.getScore() >= 100)
 			return player1;
 		else if(player2.getScore() >= 100)
@@ -270,7 +270,7 @@ public class Controller {
 		}
 		return new Player(0);
 	}
-	
+
 	/**
 	 * <p>Checks if a player has redeemed a big city bonus card.</p>
 	 */
@@ -305,7 +305,7 @@ public class Controller {
 			deck.getBigCities()[5].disable();
 			view.disableCity(5);
 		}
-		
+
 		if(deck.getBigCities()[0].isActive() && player2.getVisits()[0] == 3){
 			player2.redeemBigCity(deck.getBigCities()[0].getPoints());
 			deck.getBigCities()[0].disable();
@@ -337,7 +337,7 @@ public class Controller {
 			view.disableCity(5);
 		}
 	}
-	
+
 	/**
 	 * <p>Main method of the project.</p>
 	 * @param args Command line arguments.
@@ -346,7 +346,7 @@ public class Controller {
 		Controller controller = new Controller();
 		controller.initialize();
 	}
-	
+
 	public static class PickTrainCardListener implements ActionListener{ // Pick from Deck.
 
 		/**
@@ -398,7 +398,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class PickDestinationCardListener implements ActionListener{ // Pick from Deck.
 
 		/**
@@ -454,7 +454,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class PickOpenTrainListener implements ActionListener{ // DONE
 
 		/**
@@ -568,9 +568,9 @@ public class Controller {
 					winnerdialog.setVisible(true);
 				}
 			}
-		}	
+		}
 	}
-	
+
 	public static class PickTrainsListener1 implements ActionListener{ // Pick from Hand.
 
 		/**
@@ -588,7 +588,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class PickTrainsListener2 implements ActionListener{
 
 		/**
@@ -606,7 +606,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class PlayCardsListener1 implements ActionListener{ // Move to RailYard
 
 		/**
@@ -834,7 +834,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class PlayCardsListener2 implements ActionListener{ // DONE
 
 		/**
@@ -1062,7 +1062,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class MoveToOTTListener1 implements ActionListener{
 
 		/**
@@ -1087,7 +1087,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class MoveToOTTListener2 implements ActionListener{ // DONE
 
 		/**
@@ -1118,7 +1118,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class RedeemCardListener implements ActionListener{
 
 		/**
@@ -1157,7 +1157,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class DontRedeemCardListener implements ActionListener{
 
 		/**
@@ -1172,7 +1172,7 @@ public class Controller {
 			redeemdialog = null;
 		}
 	}
-	
+
 	public static class PlayDestCardListener1 implements ActionListener{
 
 		/**
@@ -1199,7 +1199,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class PlayDestCardListener2 implements ActionListener{
 
 		/**
@@ -1226,7 +1226,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class MyDestCardsListener1 implements ActionListener{
 
 		/**
@@ -1239,7 +1239,7 @@ public class Controller {
 			mydestdialog1.setVisible(true);
 		}
 	}
-	
+
 	public static class MyDestCardsListener2 implements ActionListener{
 
 		/**
@@ -1252,7 +1252,7 @@ public class Controller {
 			mydestdialog2.setVisible(true);
 		}
 	}
-	
+
 	public static class MyBigCitiesListener1 implements ActionListener{
 
 		/**
@@ -1266,7 +1266,7 @@ public class Controller {
 			dialog.setVisible(true);
 		}
 	}
-	
+
 	public static class MyBigCitiesListener2 implements ActionListener{
 
 		/**
@@ -1280,7 +1280,7 @@ public class Controller {
 			dialog.setVisible(true);
 		}
 	}
-	
+
 	public static class DeckFinishListen implements ActionListener{ // DONE
 
 		/**
@@ -1300,7 +1300,7 @@ public class Controller {
 					else
 						deck.addDestCard(options1.get(i));
 				}
-			
+
 				options1.clear();
 				updateInfo(player1);
 				view.updateDestCounter(deck.getDestCounter());
@@ -1319,7 +1319,7 @@ public class Controller {
 					else
 						deck.addDestCard(options2.get(i));
 				}
-				
+
 				options2.clear();
 				updateInfo(player2);
 				view.updateDestCounter(deck.getDestCounter());
@@ -1331,7 +1331,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class FinishListen implements ActionListener{ // DONE
 
 		/**
@@ -1349,42 +1349,42 @@ public class Controller {
 				}
 				else
 					deck.addDestCard(options1.get(0));
-			
+
 				if(dialog1.box2.isSelected()){
 					player1.addDestinationCard(options1.get(1));
 					view.addDestP1(options1.get(1));
 				}
 				else
 					deck.addDestCard(options1.get(1));
-				
+
 				if(dialog1.box3.isSelected()){
 					player1.addDestinationCard(options1.get(2));
 					view.addDestP1(options1.get(2));
 				}
 				else
 					deck.addDestCard(options1.get(2));
-			
+
 				if(dialog1.box4.isSelected()){
 					player1.addDestinationCard(options1.get(3));
 					view.addDestP1(options1.get(3));
 				}
 				else
 					deck.addDestCard(options1.get(3));
-			
+
 				if(dialog1.box5.isSelected()){
 					player1.addDestinationCard(options1.get(4));
 					view.addDestP1(options1.get(4));
 				}
 				else
 					deck.addDestCard(options1.get(4));
-			
+
 				if(dialog1.box6.isSelected()){
 					player1.addDestinationCard(options1.get(5));
 					view.addDestP1(options1.get(5));
 				}
 				else
 					deck.addDestCard(options1.get(5));
-			
+
 				options1.clear();
 				updateInfo(player1);
 				view.updateDestCounter(deck.getDestCounter());
@@ -1400,42 +1400,42 @@ public class Controller {
 				}
 				else
 					deck.addDestCard(options2.get(0));
-			
+
 				if(dialog2.box2.isSelected()){
 					player2.addDestinationCard(options2.get(1));
 					view.addDestP2(options2.get(1));
 				}
 				else
 					deck.addDestCard(options2.get(1));
-				
+
 				if(dialog2.box3.isSelected()){
 					player2.addDestinationCard(options2.get(2));
 					view.addDestP2(options2.get(2));
 				}
 				else
 					deck.addDestCard(options2.get(2));
-			
+
 				if(dialog2.box4.isSelected()){
 					player2.addDestinationCard(options2.get(3));
 					view.addDestP2(options2.get(3));
 				}
 				else
 					deck.addDestCard(options2.get(3));
-			
+
 				if(dialog2.box5.isSelected()){
 					player2.addDestinationCard(options2.get(4));
 					view.addDestP2(options2.get(4));
 				}
 				else
 					deck.addDestCard(options2.get(4));
-			
+
 				if(dialog2.box6.isSelected()){
 					player2.addDestinationCard(options2.get(5));
 					view.addDestP2(options2.get(5));
 				}
 				else
 					deck.addDestCard(options2.get(5));
-			
+
 				options2.clear();
 				updateInfo(player2);
 				view.updateDestCounter(deck.getDestCounter());
@@ -1445,7 +1445,7 @@ public class Controller {
 			}
 		}
 	}
-	
+
 	public static class ExitGameListener implements ActionListener{
 
 		/**
